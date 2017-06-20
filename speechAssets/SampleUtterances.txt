@@ -1,0 +1,54 @@
+PickGenreIntent recommend a book
+PickGenreIntent recommend books
+PickGenreIntent give me book recommendations
+PickGenreIntent {genre}
+PickGenreIntent recommend {genre}
+PickGenreIntent recommend {genre} books
+PickGenreIntent {genre} books
+PickGenreIntent give me books in the {genre} genre
+PickGenreIntent recommend books in the {genre} genre
+PickGenreIntent recommend a novel
+PickGenreIntent recommend novels
+PickGenreIntent give me novel recommendations
+PickGenreIntent recommend {genre} novels
+PickGenreIntent {genre} novels
+PickGenreIntent give me novels in the {genre} genre
+PickGenreIntent recommend novels in the {genre} genre
+PickGenreIntent what can I read in the {genre} genre
+PickGenreIntent what should I read in the {genre} genre
+PickGenreIntent what are some popular books in the {genre} genre
+PickGenreIntent critically acclaimed books in the {genre} genre
+PickGenreIntent recommend critically acclaimed {genre} books
+PickGenreIntent recommend critically acclaimed {genre} novels
+
+
+GetReviewIntent {booknumber}
+GetReviewIntent book number {booknumber}
+GetReviewIntent book number {booknumber} review
+GetReviewIntent book number {booknumber} details
+GetReviewIntent number {booknumber}
+GetReviewIntent I would like to hear about book {booknumber}
+GetReviewIntent I would like to hear about book number {booknumber}
+GetReviewIntent I would like to hear more about book {booknumber}
+GetReviewIntent I would like to hear more about book number {booknumber}
+GetReviewIntent I would like to know more about book {booknumber}
+GetReviewIntent I would like to know more about book number {booknumber}
+GetReviewIntent I want to know about book {booknumber}
+GetReviewIntent I want to know about book number {booknumber}
+GetReviewIntent I am interested in book {booknumber}
+GetReviewIntent I am interested in book number {booknumber}
+GetReviewIntent more about book {booknumber}
+GetReviewIntent more about book  number {booknumber}
+GetReviewIntent book {booknumber}
+GetReviewIntent book {booknumber} details
+GetReviewIntent book {booknumber} review
+GetReviewIntent review for book number {booknumber}
+GetReviewIntent review for book {booknumber}
+GetReviewIntent review snippet for book number {booknumber}
+GetReviewIntent give me the review for book number {booknumber}
+GetReviewIntent detail for book number {booknumber}
+GetReviewIntent how about {booknumber}
+GetReviewIntent how about book {booknumber}
+GetReviewIntent how about book number {booknumber}
+GetReviewIntent tell me about book {booknumber}
+GetReviewIntent tell me about book number {booknumber}

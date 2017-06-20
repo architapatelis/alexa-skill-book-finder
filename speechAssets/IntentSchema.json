@@ -1,0 +1,41 @@
+
+{
+    "intents": [
+        {
+            "intent": "PickGenreIntent",
+            "slots": [
+                {
+                    "name": "genre",
+                    "type": "GENRES"
+                }
+            ]
+        },
+        {
+            "intent": "GetReviewIntent",
+            "slots": [
+                {
+                    "name": "booknumber",
+                    "type": "AMAZON.NUMBER"
+                }
+            ]
+        },
+        {
+            "intent": "AMAZON.HelpIntent"
+        },
+        {
+            "intent": "AMAZON.NextIntent"
+        },
+        {
+            "intent": "AMAZON.YesIntent"
+        },
+        {
+            "intent": "AMAZON.NoIntent"
+        },
+        {
+            "intent": "AMAZON.StopIntent"
+        },
+        {
+            "intent": "AMAZON.CancelIntent"
+        },
+    ]
+}
