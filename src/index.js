@@ -2,7 +2,7 @@
 var Alexa = require('alexa-sdk');
 //var http = require('http');
 var https = require('https');
-var APP_ID = "amzn1.ask.skill.2fe31874-f148-4a83-8a8d-aa416f26ee04";
+var APP_ID = "YOUR APP ID GOES HERE";
 
 
 
@@ -444,7 +444,7 @@ exports.handler = function (event, context, callback) {
 // Create a web request and handle the response.
 //#3 Get the list_of_books array from the I Dream Books API.
 function getListOfBooksJSON(genre, callback) {
-    var APIKey = "ec4a3ad3ef8fae12101f484b9dd89bbd63df7e1e";
+    var APIKey = "YOUR API KEY GOES HERE";
     https.get('https://idreambooks.com/api/publications/recent_recos.json?key=' + APIKey +'&slug=' + genre, (resp) => {
         var data = '';
 
