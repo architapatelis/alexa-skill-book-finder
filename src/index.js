@@ -1,11 +1,10 @@
 
 var Alexa = require('alexa-sdk');
-var http = require('http');
-var APP_ID = undefined;
+//var http = require('http');
+var https = require('https');
+var APP_ID = "amzn1.ask.skill.2fe31874-f148-4a83-8a8d-aa416f26ee04";
 
-var request = require('request');
 
-var GA_TRACKING_ID = undefined;
 
 var states = {
     SEARCHMODE: '_SEARCHMODE',
@@ -46,20 +45,7 @@ var newSessionHandlers = {
         }
         var speechOutput = welcomeMessage;
         var repromptSpeech = "You can ask me to recommend books in a specific genre or say help. What will it be?";
-
-        trackEvent(
-
-            'Launch Request',
-            'User started the Book Finder app',
-            'user heard welcome message',
-            '1', // Event value must be numeric.
-            function(err, response){
-                alexa.emit(':ask', speechOutput, repromptSpeech);
-                if(err) {
-                    next(err);
-                    return;
-                }
-        });
+        this.emit(':ask', speechOutput, repromptSpeech);
     },
     'PickGenreIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -89,23 +75,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         //if the user did not pick a genre we have to prompt them to do so.
         if (typeof this.event.request.intent.slots.genre.value === 'undefined'){
 
-            var speechOutput = "I'm sorry, but, you must first select a valid genre. You can say fiction, cooking, history, action. Check the Alexa App for a more comprehensive list of available genres.";
+            var speechOutput = "What genre would you like to select? For example you can say fiction, non fiction, bestsellers, history, cooking. Check the Alexa App for a more comprehensive list of available genres.";
 
+            //this.emit(':ask', speechOutput);
             var cardTitle = "AVAILABLE GENRES: " + newline;
             var cardContent = validGenres + newline;
-            trackEvent(
-                'Pick Genre Intent - No Genre',
-                'User did not pick a valid genre, was prompted to do so.',
-                'user prompted to give genre',
-                '2', // Event value must be numeric.
-                function(err, response){
-                    alexa.emit(':askWithCard', speechOutput, speechOutput, cardTitle, cardContent);
-
-                    if(err) {
-                        next(err);
-                        return;
-                    }
-            });
+            alexa.emit(':askWithCard', speechOutput, speechOutput, cardTitle, cardContent);
         }
 
         //the user has selected the genre, we have to determine which one it is.
@@ -202,6 +177,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var list_of_books = [];
                     var body = JSON.parse(response);
 
+
                     if(body === null) {
                         var speechOutput = "I am sorry, there was a problem getting the list of recommendations, please ask again.";
                         alexa.emit(':ask', speechOutput);
@@ -283,19 +259,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var speechOutput = speechText;
                     var cardTitle = "YOU CAN SAY: " + newline;
                     var cardContent = "-- Next" + newline + "-- book number two" + newline + "-- recommend cooking" + newline + newline + "AVAILABLE GENRES: " + newline + validGenres + newline;
-                    trackEvent(
-                        'Pick Genre Intent',
-                        'User picked valid genre, Get List of Books',
-                        'user given top five books in the list',
-                        '3', // Event value must be numeric.
-                        function(err, response){
-                            alexa.emit(':askWithCard', speechOutput, repromptSpeech, cardTitle, cardContent);
-
-                            if(err) {
-                                next(err);
-                                return;
-                            }
-                    });
+                    alexa.emit(':askWithCard', speechOutput, repromptSpeech, cardTitle, cardContent);
                 });
             }
         }
@@ -350,19 +314,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     var cardTitle = "Review for: " + titleupper + newline;
                     var cardContent = "Author: " + author + newline + "Reviewed by: " + reviewed_by + newline + "Review snippet: " + description_sentence + newline + newline + "YOU CAN SAY:" + newline + "-- Next" + newline + "-- book number two" + newline + "-- recommend fiction" + newline + newline + "AVAILABLE GENRES: " + newline + validGenres + newline;
-                    trackEvent(
-                        'Get Review Intent',
-                        'User asked for a book review',
-                        'ask user if they want more reviews',
-                        '4', // Event value must be numeric.
-                        function(err, response){
-                            alexa.emit(':askWithCard', speechOutput, speechOutput, cardTitle, cardContent);
 
-                            if(err) {
-                                next(err);
-                                return;
-                            }
-                    });
+                    alexa.emit(':askWithCard', speechOutput, speechOutput, cardTitle, cardContent);
                 }
             } else {
                 alexa.emit(':ask', noBookErrorMessage);
@@ -398,6 +351,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             	}
             }
 
+            //var start_at = start_list + 1
+
             if(end_list === list_of_books.length) {
                 var repromptSpeech = "<p>" + "You have reached the end of recommendations in the " + sessionAttributes.genreName + " genre. To hear more about one of these books, give me a number between one and " + end_list + "." + "</p>" + "<p>" + " Or, you can ask for a new recommendation. For example say, recommend nature." + "</p>";
 
@@ -415,18 +370,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
 
         	var speechOutput = speechText;
-            trackEvent(
-                'Next Intent',
-                'User said Next',
-                'the user said next ',
-                '5', // Event value must be numeric.
-                function(err, response){
-                    alexa.emit(':askWithCard', speechOutput, repromptSpeech, cardTitle, cardContent);
-                    if(err) {
-                        next(err);
-                        return;
-                    }
-                });
+            alexa.emit(':askWithCard', speechOutput, repromptSpeech, cardTitle, cardContent);
         }else {
             var speechOutput = "<p>" + "You have reached the end of recommendations in the " + sessionAttributes.genreName + " genre. To hear more about one of these books, give me a number between one and " + sessionAttributes.list_of_books.length + "." + "</p>" + "<p>" + " Or, you can ask for a new recommendation. For example say, recommend nature." + "</p>";
 
@@ -434,6 +378,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var cardContent = "-- book number two" + newline + "-- recommend fiction" + newline + "-- Stop" + newline + newline + "AVAILABLE GENRES: " + newline + validGenres + newline;
             alexa.emit(':askWithCard', speechOutput, speechOutput, cardTitle, cardContent);
         }
+    },
+    'AMAZON.YesIntent': function () {
+        output = HelpMessage;
+        this.emit(':ask', HelpMessage, HelpMessage);
+    },
+    'AMAZON.NoIntent': function () {
+        output = HelpMessage;
+        this.emit(':ask', HelpMessage, HelpMessage);
+        //this.emit(":tell", goodbyeMessage);
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
@@ -448,46 +401,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             "-- Recommend nature" + newline +
             "-- mystery" + newline;
 
-        trackEvent(
-            'Help Intent',
-            'User said Help',
-            'the user heard help message',
-            '6', // Event value must be numeric.
-            function(err, response){
-                alexa.emit(':askWithCard', speechOutput, repromptSpeech, cardTitle, cardContent);
-                if(err) {
-                    next(err);
-                    return;
-                }
-        });
-    },
-    'AMAZON.YesIntent': function () {
-        trackEvent(
-            'Yes Intent',
-            'User said Yes',
-            'User heard help message',
-            '7', // Event value must be numeric.
-            function(err, response){
-                alexa.emit(':ask', HelpMessage, HelpMessage);
-                if(err) {
-                    next(err);
-                    return;
-                }
-            });
-    },
-    'AMAZON.NoIntent': function () {
-          trackEvent(
-              'No Intent',
-              'User said No',
-              'User heard help message',
-              '8', // Event value must be numeric.
-              function(err, response){
-                  alexa.emit(':ask', HelpMessage, HelpMessage);
-                  if(err) {
-                      next(err);
-                      return;
-                  }
-              });
+        alexa.emit(':askWithCard', speechOutput, repromptSpeech, cardTitle, cardContent);
     },
     'AMAZON.CancelIntent': function () {
         // Use this function to clear up and save any data needed between sessions
@@ -530,69 +444,22 @@ exports.handler = function (event, context, callback) {
 // Create a web request and handle the response.
 //#3 Get the list_of_books array from the I Dream Books API.
 function getListOfBooksJSON(genre, callback) {
-    // add API code from I Dream Books API. place API in "".
-    var APIKey = undefined;
-    var options = {
-        //https://idreambooks.com/api/publications/recent_recos.json?key=APIKey&slug=fiction
-        host: 'idreambooks.com',
-        path: '/api/publications/recent_recos.json?key=' + APIKey + '&slug=' + genre,
-        method: 'GET'
-    };
+    var APIKey = "ec4a3ad3ef8fae12101f484b9dd89bbd63df7e1e";
+    https.get('https://idreambooks.com/api/publications/recent_recos.json?key=' + APIKey +'&slug=' + genre, (resp) => {
+        var data = '';
 
-    var req = http.request(options, (res) => {
-
-        var body = '';
-        //var list_of_books = [];
-
-        res.on('data', (d) => {
-            body += d;
+        // A chunk of data has been recieved.
+        resp.on('data', (chunk) => {
+            data += chunk;
         });
 
-        res.on('end', function () {
-            callback(body);
+        // The whole response has been received.
+        resp.on('end', function () {
+            callback(data)
         });
 
+    }).on("error", (err) => {
+      console.log("Error: " + err.message);
     });
-    req.end();
-
-    req.on('error', (e) => {
-        console.error(e);
-    });
-};
-
-
-
-// google analytics
-function trackEvent (category, action, label, value, cb) {
-  const data = {
-    v: '1', // API Version.
-    tid: GA_TRACKING_ID, // Tracking ID / Property ID.
-    // Anonymous Client Identifier. Ideally, this should be a UUID that
-    // is associated with particular user, device, or browser instance.
-    cid: '555',
-    t: 'event', // Event hit type.
-    ec: category, // Event category.
-    ea: action, // Event action.
-    el: label, // Event label.
-    ev: value // Event value.
-  };
-
-  request.post(
-    'http://www.google-analytics.com/collect',
-    {
-      form: data
-    },
-    (err, response) => {
-      if (err) {
-        cb(err);
-        return;
-      }
-      if (response.statusCode !== 200) {
-        cb(new Error('Tracking failed'));
-        return;
-      }
-      cb();
-    }
-  );
 };
  
